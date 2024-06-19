@@ -2,6 +2,9 @@
 
 This server will store my personal sms messages in a lightweight sqlite database
 
+## Motivation
+I'm paranoid of losing my main phone with my only number where a lot of my main accounts are linked. This phone contains social media apps, banking apps, and other productivity apps that I use on a day to day basis.
+
 ## Components
 - **Main Phone**
   - will delegate incoming SMS messages using Tasker and `curl` command to the server
