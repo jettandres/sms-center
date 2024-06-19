@@ -14,6 +14,8 @@ I'm paranoid of losing my main phone with my only number where a lot of my main 
   - Android app used for automation
 - **React Native App**
   - Custom mobile app used to retrieve messages from the server as well as receive Push Notifications
+- **SMS Server**
+  - A basic linode instance running on the cheapest plan of $5 per month
 
 ## Use Cases
 - Store incoming SMS messages from Main Phone via `POST` endpoint
