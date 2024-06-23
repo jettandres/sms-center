@@ -78,8 +78,15 @@ Insert SMS Record
 POST /sms/:mobile-number
 ```
 
-// TODO: add payload and response
-
 ## Class Diagram
 
-// TODO: add class mermaid diagram
+```mermaid
+erDiagram
+SMS {
+  string id
+  date inserted_at
+  string from
+  string to
+  string body
+}
+```
