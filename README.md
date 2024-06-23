@@ -56,7 +56,55 @@ sequenceDiagram
   React Native App -> Backup Phone: Display Notification
 ```
 
-## Endpoints
+## API
+
+Responses will be in JSON and will semi-comply with [JSend](https://github.com/omniti-labs/jsend) REST API standard for simplicity.
+
+### Success Response
+
+`200 OK`
+
+```json
+{
+    "status": "success",
+    "data": {
+        "sms": [
+          {
+             "id": "10b41abe-db8e-432f-bd01-2cb34652dfa3",
+             "inserted_at": "2024-06-23t10:55:04z",
+             "from": "0916123456",
+             "to": "09062088003",
+             "body": "hello world"
+          },
+          {
+             "id": "10b41eba-db8e-432f-bd01-2cb34652dda1",
+             "inserted_at": "2024-06-23t10:55:04z",
+             "from": "0916123456",
+             "to": "09062088003",
+             "body": "hello again world"
+          },
+          {
+             "id": "10b41eba-db8e-432f-bd01-2cb34652dda1",
+             "inserted_at": "2024-06-23t10:55:04z",
+             "from": "0916123456",
+             "to": "09062088003",
+             "body": "sup world"
+          }
+        ]
+    }
+}
+
+```
+### Error Response
+
+Internal server errors are to return `500` status codes
+
+```json
+{
+    "status": "error",
+    "message": "Unable to connect to database"
+}
+```
 
 Retrieve all SMS messages
 ```
