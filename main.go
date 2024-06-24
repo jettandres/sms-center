@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
 func main() {
-	fmt.Println("hello world")
+	handler := http.HandlerFunc(SmsServer)
+	fmt.Println("server running...")
+	fmt.Println(http.ListenAndServe(":5000", handler))
 }
