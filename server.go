@@ -21,5 +21,12 @@ func NewSmsServer() *SmsServer {
 }
 
 func (s *SmsServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	router := http.NewServeMux()
+	router.Handle("/sms", http.HandlerFunc(handleSms))
+	router.ServeHTTP(w, r)
 	w.WriteHeader(http.StatusNotFound)
+}
+
+func handleSms(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 }
