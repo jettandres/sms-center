@@ -11,7 +11,8 @@ func TestMain(t *testing.T) {
 		request := httptest.NewRequest(http.MethodGet, "/sms", nil)
 		response := httptest.NewRecorder()
 
-		SmsServer(response, request)
+		server := NewSmsServer()
+		server.ServeHTTP(response, request)
 
 		if response.Result().StatusCode != http.StatusOK {
 			t.Errorf("incorrect status code, want %d, got %s", http.StatusOK, response.Result().Status)

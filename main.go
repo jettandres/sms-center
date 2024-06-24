@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	handler := http.HandlerFunc(SmsServer)
+	server := NewSmsServer()
 	fmt.Println("server running...")
-	fmt.Println(http.ListenAndServe(":5000", handler))
+	fmt.Println(http.ListenAndServe(":5000", server))
 }
