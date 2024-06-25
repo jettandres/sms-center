@@ -67,5 +67,16 @@ func (s *SmsServer) handleGetAllSms(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *SmsServer) handleGetSms(w http.ResponseWriter, r *http.Request) {
+	resp := GetSmsResponse{
+		Status: "success",
+		Data: SmsData{
+			Sms: s.store.GetSms(),
+		},
+	}
+
+	body, _ := json.Marshal(resp)
+
 	w.WriteHeader(http.StatusOK)
+	w.Write(body)
+
 }
