@@ -39,6 +39,13 @@ func TestMain(t *testing.T) {
 		server.ServeHTTP(response, request)
 
 		assertStatusOk(t, response)
+
+		var body GetSmsResponse
+		err := json.NewDecoder(response.Body).Decode(&body)
+
+		if err != nil {
+			t.Errorf("unable to parse response from server")
+		}
 	})
 }
 
