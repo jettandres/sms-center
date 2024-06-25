@@ -6,7 +6,8 @@ import (
 )
 
 func main() {
-	server := NewSmsServer()
+	store := NewInMemoryStore()
+	server := NewSmsServer(store)
 	fmt.Println("server running...")
 	fmt.Println(http.ListenAndServe(":5000", server))
 }

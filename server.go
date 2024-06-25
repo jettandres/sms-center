@@ -13,34 +13,39 @@ type Sms struct {
 	Body        string `json:"body"`
 }
 
-type ResponseData struct {
+type SmsList struct {
 	Sms []Sms `json:"sms"`
 }
 
-type ServerResponse struct {
-	Status string       `json:"status"`
-	Data   ResponseData `json:"data"`
+type GetAllSmsResponse struct {
+	Status string  `json:"status"`
+	Data   SmsList `json:"data"`
 }
 
 type SmsServer struct {
+	store Store
 	http.Handler
 }
 
-func NewSmsServer() *SmsServer {
-	return new(SmsServer)
+func NewSmsServer(store Store) *SmsServer {
+	server := new(SmsServer)
+	server.store = store
+	return server
 }
 
 func (s *SmsServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	router := http.NewServeMux()
-	router.Handle("/sms", http.HandlerFunc(handleSms))
+
+	router.Handle("/sms", http.HandlerFunc(s.handleSms))
+
 	router.ServeHTTP(w, r)
 }
 
-func handleSms(w http.ResponseWriter, r *http.Request) {
-	resp := ServerResponse{
+func (s *SmsServer) handleSms(w http.ResponseWriter, r *http.Request) {
+	resp := GetAllSmsResponse{
 		Status: "success",
-		Data: ResponseData{
-			Sms: []Sms{},
+		Data: SmsList{
+			Sms: s.store.GetAllSms(),
 		},
 	}
 
