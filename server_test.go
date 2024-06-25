@@ -36,7 +36,7 @@ func TestMain(t *testing.T) {
 
 		assertStatusOk(t, response)
 
-		var body GetSmsFromNumberResponse
+		var body GetAllSmsFromNumberResponse
 		assertBody(t, response, body)
 	})
 
@@ -52,6 +52,9 @@ func TestMain(t *testing.T) {
 		server.ServeHTTP(response, request)
 
 		assertStatusOk(t, response)
+
+		var body GetSmsFromNumberResponse
+		assertBody(t, response, body)
 	})
 }
 
