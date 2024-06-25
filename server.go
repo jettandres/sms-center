@@ -36,7 +36,8 @@ func NewSmsServer(store Store) *SmsServer {
 func (s *SmsServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	router := http.NewServeMux()
 
-	router.Handle("/sms", http.HandlerFunc(s.handleSms))
+	router.HandleFunc("/sms", s.handleSms)
+	router.HandleFunc("/sms/", s.handleSms)
 
 	router.ServeHTTP(w, r)
 }
