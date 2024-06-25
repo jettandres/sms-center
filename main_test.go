@@ -9,7 +9,7 @@ import (
 )
 
 func TestMain(t *testing.T) {
-	t.Run("200 OK /sms", func(t *testing.T) {
+	t.Run("GET /sms", func(t *testing.T) {
 		request := httptest.NewRequest(http.MethodGet, "/sms", nil)
 		response := httptest.NewRecorder()
 
@@ -28,7 +28,7 @@ func TestMain(t *testing.T) {
 		}
 	})
 
-	t.Run("200 OK /sms/:mobile-number", func(t *testing.T) {
+	t.Run("GET /sms/:mobile-number", func(t *testing.T) {
 		mobileNumber := "0916123456"
 		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s", mobileNumber), nil)
 		response := httptest.NewRecorder()
