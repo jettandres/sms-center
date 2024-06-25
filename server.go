@@ -17,9 +17,18 @@ type AllSmsData struct {
 	Sms []Sms `json:"sms"`
 }
 
+type SmsData struct {
+	Sms Sms `json:"sms"`
+}
+
 type GetAllSmsResponse struct {
 	Status string     `json:"status"`
 	Data   AllSmsData `json:"data"`
+}
+
+type GetSmsResponse struct {
+	Status string  `json:"status"`
+	Data   SmsData `json:"data"`
 }
 
 type SmsServer struct {

@@ -18,9 +18,7 @@ func TestMain(t *testing.T) {
 		server := NewSmsServer(store)
 		server.ServeHTTP(response, request)
 
-		if response.Result().StatusCode != http.StatusOK {
-			t.Errorf("incorrect status code, want %d, got %s", http.StatusOK, response.Result().Status)
-		}
+		assertStatusOk(t, response)
 
 		var body GetAllSmsResponse
 		err := json.NewDecoder(response.Body).Decode(&body)
@@ -40,8 +38,14 @@ func TestMain(t *testing.T) {
 		server := NewSmsServer(store)
 		server.ServeHTTP(response, request)
 
-		if response.Result().StatusCode != http.StatusOK {
-			t.Errorf("incorrect status code, want %d, got %s", http.StatusOK, response.Result().Status)
-		}
+		assertStatusOk(t, response)
 	})
+}
+
+func assertStatusOk(t *testing.T, response *httptest.ResponseRecorder) {
+	t.Helper()
+	if response.Result().StatusCode != http.StatusOK {
+		t.Errorf("incorrect status code, want %d, got %s", http.StatusOK, response.Result().Status)
+	}
+
 }
