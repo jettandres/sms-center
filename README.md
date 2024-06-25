@@ -116,7 +116,7 @@ Retrieve SMS messages of a number
 GET /sms/:mobile-number
 ```
 
-Retrieve SMS messaage of a specific number
+Retrieve SMS message of a specific number
 ```
 GET /sms/:mobile-number/:id
 ```
