@@ -46,7 +46,7 @@ func (s *SmsServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	router := http.NewServeMux()
 
 	router.HandleFunc("GET /sms", s.handleGetAllSms)
-	router.HandleFunc("GET /sms/{mobileNumber}", s.handleGetSms)
+	router.HandleFunc("GET /sms/{mobileNumber}", s.handleGetAllSmsFromNumber)
 
 	router.ServeHTTP(w, r)
 }
@@ -66,12 +66,12 @@ func (s *SmsServer) handleGetAllSms(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (s *SmsServer) handleGetSms(w http.ResponseWriter, r *http.Request) {
+func (s *SmsServer) handleGetAllSmsFromNumber(w http.ResponseWriter, r *http.Request) {
 	mobileNumber := r.PathValue("mobileNumber")
 	resp := GetSmsResponse{
 		Status: "success",
 		Data: SmsData{
-			Sms: s.store.GetSms(mobileNumber),
+			Sms: s.store.GetAllSmsFromNumber(mobileNumber),
 		},
 	}
 
