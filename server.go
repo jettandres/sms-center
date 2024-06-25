@@ -47,6 +47,7 @@ func (s *SmsServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	router.HandleFunc("GET /sms", s.handleGetAllSms)
 	router.HandleFunc("GET /sms/{mobileNumber}", s.handleGetAllSmsFromNumber)
+	router.HandleFunc("GET /sms/{mobileNumber}/{id}", s.handleGetSmsFromMobileNumber)
 
 	router.ServeHTTP(w, r)
 }
@@ -79,4 +80,8 @@ func (s *SmsServer) handleGetAllSmsFromNumber(w http.ResponseWriter, r *http.Req
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
+}
+
+func (s *SmsServer) handleGetSmsFromMobileNumber(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 }

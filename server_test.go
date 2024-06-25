@@ -39,6 +39,20 @@ func TestMain(t *testing.T) {
 		var body GetSmsResponse
 		assertBody(t, response, body)
 	})
+
+	t.Run("GET /sms/:mobile-number/:id", func(t *testing.T) {
+		mobileNumber := "091612456"
+		id := "some-uuid"
+		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s/%s", mobileNumber, id), nil)
+		response := httptest.NewRecorder()
+
+		store := NewInMemoryStore()
+
+		server := NewSmsServer(store)
+		server.ServeHTTP(response, request)
+
+		assertStatusOk(t, response)
+	})
 }
 
 func assertStatusOk(t *testing.T, response *httptest.ResponseRecorder) {
