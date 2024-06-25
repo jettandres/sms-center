@@ -36,7 +36,7 @@ func TestMain(t *testing.T) {
 
 		assertStatusOk(t, response)
 
-		var body GetSmsResponse
+		var body GetSmsFromNumberResponse
 		assertBody(t, response, body)
 	})
 

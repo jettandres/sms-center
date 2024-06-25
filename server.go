@@ -26,9 +26,9 @@ type GetAllSmsResponse struct {
 	Data   AllSmsData `json:"data"`
 }
 
-type GetSmsResponse struct {
-	Status string  `json:"status"`
-	Data   SmsData `json:"data"`
+type GetSmsFromNumberResponse struct {
+	Status string     `json:"status"`
+	Data   AllSmsData `json:"data"`
 }
 
 type SmsServer struct {
@@ -69,9 +69,9 @@ func (s *SmsServer) handleGetAllSms(w http.ResponseWriter, r *http.Request) {
 
 func (s *SmsServer) handleGetAllSmsFromNumber(w http.ResponseWriter, r *http.Request) {
 	mobileNumber := r.PathValue("mobileNumber")
-	resp := GetSmsResponse{
+	resp := GetSmsFromNumberResponse{
 		Status: "success",
-		Data: SmsData{
+		Data: AllSmsData{
 			Sms: s.store.GetAllSmsFromNumber(mobileNumber),
 		},
 	}

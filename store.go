@@ -2,7 +2,7 @@ package main
 
 type Store interface {
 	GetAllSms() []Sms
-	GetAllSmsFromNumber(mobilenNumber string) Sms
+	GetAllSmsFromNumber(mobileNumber string) []Sms
 }
 
 type InMemoryStore struct {
@@ -16,6 +16,6 @@ func (store *InMemoryStore) GetAllSms() []Sms {
 	return []Sms{}
 }
 
-func (store *InMemoryStore) GetAllSmsFromNumber(mobileNumber string) Sms {
-	return Sms{}
+func (store *InMemoryStore) GetAllSmsFromNumber(mobileNumber string) []Sms {
+	return []Sms{}
 }
