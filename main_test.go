@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -26,6 +27,21 @@ func TestMain(t *testing.T) {
 
 		if err != nil {
 			t.Errorf("unable to parse response from server")
+		}
+	})
+
+	t.Run("200 OK /sms/:mobile-number", func(t *testing.T) {
+		mobileNumber := "0916123456"
+		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s", mobileNumber), nil)
+		response := httptest.NewRecorder()
+
+		store := NewInMemoryStore()
+
+		server := NewSmsServer(store)
+		server.ServeHTTP(response, request)
+
+		if response.Result().StatusCode != http.StatusOK {
+			t.Errorf("incorrect status code, want %d, got %s", http.StatusOK, response.Result().Status)
 		}
 	})
 }

@@ -13,13 +13,13 @@ type Sms struct {
 	Body        string `json:"body"`
 }
 
-type SmsList struct {
+type AllSmsData struct {
 	Sms []Sms `json:"sms"`
 }
 
 type GetAllSmsResponse struct {
-	Status string  `json:"status"`
-	Data   SmsList `json:"data"`
+	Status string     `json:"status"`
+	Data   AllSmsData `json:"data"`
 }
 
 type SmsServer struct {
@@ -44,7 +44,7 @@ func (s *SmsServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (s *SmsServer) handleSms(w http.ResponseWriter, r *http.Request) {
 	resp := GetAllSmsResponse{
 		Status: "success",
-		Data: SmsList{
+		Data: AllSmsData{
 			Sms: s.store.GetAllSms(),
 		},
 	}
