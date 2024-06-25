@@ -21,11 +21,7 @@ func TestMain(t *testing.T) {
 		assertStatusOk(t, response)
 
 		var body GetAllSmsResponse
-		err := json.NewDecoder(response.Body).Decode(&body)
-
-		if err != nil {
-			t.Errorf("unable to parse response from server")
-		}
+		assertBody(t, response, body)
 	})
 
 	t.Run("GET /sms/:mobile-number", func(t *testing.T) {
@@ -41,11 +37,7 @@ func TestMain(t *testing.T) {
 		assertStatusOk(t, response)
 
 		var body GetSmsResponse
-		err := json.NewDecoder(response.Body).Decode(&body)
-
-		if err != nil {
-			t.Errorf("unable to parse response from server")
-		}
+		assertBody(t, response, body)
 	})
 }
 
@@ -55,4 +47,12 @@ func assertStatusOk(t *testing.T, response *httptest.ResponseRecorder) {
 		t.Errorf("incorrect status code, want %d, got %s", http.StatusOK, response.Result().Status)
 	}
 
+}
+
+func assertBody(t *testing.T, response *httptest.ResponseRecorder, body any) {
+	t.Helper()
+	err := json.NewDecoder(response.Body).Decode(&body)
+	if err != nil {
+		t.Errorf("unable to parse response from server")
+	}
 }
