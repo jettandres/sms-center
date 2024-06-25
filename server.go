@@ -36,13 +36,13 @@ func NewSmsServer(store Store) *SmsServer {
 func (s *SmsServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	router := http.NewServeMux()
 
-	router.HandleFunc("/sms", s.handleSms)
-	router.HandleFunc("/sms/", s.handleSms)
+	router.HandleFunc("GET /sms", s.handleGetAllSms)
+	router.HandleFunc("GET /sms/{mobileNumber}", s.handleGetSms)
 
 	router.ServeHTTP(w, r)
 }
 
-func (s *SmsServer) handleSms(w http.ResponseWriter, r *http.Request) {
+func (s *SmsServer) handleGetAllSms(w http.ResponseWriter, r *http.Request) {
 	resp := GetAllSmsResponse{
 		Status: "success",
 		Data: AllSmsData{
@@ -55,4 +55,8 @@ func (s *SmsServer) handleSms(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
 
+}
+
+func (s *SmsServer) handleGetSms(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 }
