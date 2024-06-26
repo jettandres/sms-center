@@ -36,6 +36,11 @@ type GetSmsFromNumberResponse struct {
 	Data   SmsData `json:"data"`
 }
 
+type ErrorResponse struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+}
+
 type SmsServer struct {
 	store Store
 	http.Handler
@@ -65,7 +70,10 @@ func (s *SmsServer) handleGetAllSms(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	body, _ := json.Marshal(resp)
+	body, err := json.Marshal(resp)
+	if err != nil {
+		handleError(err, w)
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
@@ -81,7 +89,10 @@ func (s *SmsServer) handleGetAllSmsFromNumber(w http.ResponseWriter, r *http.Req
 		},
 	}
 
-	body, _ := json.Marshal(resp)
+	body, err := json.Marshal(resp)
+	if err != nil {
+		handleError(err, w)
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
@@ -96,8 +107,23 @@ func (s *SmsServer) handleGetSmsFromMobileNumber(w http.ResponseWriter, r *http.
 		},
 	}
 
-	body, _ := json.Marshal(resp)
+	body, err := json.Marshal(resp)
+	if err != nil {
+		handleError(err, w)
+	}
 
 	w.WriteHeader(http.StatusOK)
+	w.Write(body)
+}
+
+func handleError(err error, w http.ResponseWriter) {
+	resp := ErrorResponse{
+		Status:  "error",
+		Message: err.Error(),
+	}
+
+	body, _ := json.Marshal(resp)
+
+	w.WriteHeader(http.StatusInternalServerError)
 	w.Write(body)
 }
