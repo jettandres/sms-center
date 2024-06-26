@@ -15,7 +15,6 @@ type Sms struct {
 
 type SmsPayload struct {
 	From string `json:"from"`
-	To   string `json:"to"`
 	Body string `json:"body"`
 }
 
@@ -42,7 +41,7 @@ type GetSmsFromNumberResponse struct {
 	Data   SmsData `json:"data"`
 }
 
-type PostSmsResponse struct {
+type InsertSmsResponse struct {
 	Status string  `json:"status"`
 	Data   SmsData `json:"data"`
 }
@@ -69,6 +68,7 @@ func (s *SmsServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	router.HandleFunc("GET /sms", s.handleGetAllSms)
 	router.HandleFunc("GET /sms/{mobileNumber}", s.handleGetAllSmsFromNumber)
 	router.HandleFunc("GET /sms/{mobileNumber}/{id}", s.handleGetSmsFromMobileNumber)
+	router.HandleFunc("POST /sms/{mobileNumber}", s.handleInsertSms)
 
 	router.ServeHTTP(w, r)
 }
@@ -115,6 +115,32 @@ func (s *SmsServer) handleGetSmsFromMobileNumber(w http.ResponseWriter, r *http.
 		Status: "success",
 		Data: SmsData{
 			s.store.GetSmsFromNumber(mobileNumber),
+		},
+	}
+
+	body, err := json.Marshal(resp)
+	if err != nil {
+		handleError(err, http.StatusInternalServerError, w)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(body)
+}
+
+func (s *SmsServer) handleInsertSms(w http.ResponseWriter, r *http.Request) {
+	mobileNumber := r.PathValue("mobileNumber")
+
+	var payload SmsPayload
+	err := json.NewDecoder(r.Body).Decode(&payload)
+
+	if err != nil {
+		handleError(err, http.StatusInternalServerError, w)
+	}
+
+	resp := InsertSmsResponse{
+		Status: "success",
+		Data: SmsData{
+			s.store.InsertSms(payload.From, mobileNumber, payload.Body),
 		},
 	}
 
