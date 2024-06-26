@@ -136,6 +136,22 @@ payload
 }
 ```
 
+response
+```json
+{
+    "status": "success",
+    "data": {
+      "sms": {
+         "id": "10b41abe-db8e-432f-bd01-2cb34652dfa3",
+         "inserted_at": "2024-06-23t10:55:04z",
+         "from": "0916123456",
+         "to": "09062088003",
+         "body": "hello world"
+      }
+    }
+}
+```
+
 ## Class Diagram
 
 ```mermaid
