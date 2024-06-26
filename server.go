@@ -13,6 +13,12 @@ type Sms struct {
 	Body        string `json:"body"`
 }
 
+type SmsPayload struct {
+	From string `json:"from"`
+	To   string `json:"to"`
+	Body string `json:"body"`
+}
+
 type AllSmsData struct {
 	Sms []Sms `json:"sms"`
 }
@@ -32,6 +38,11 @@ type GetAllSmsFromNumberResponse struct {
 }
 
 type GetSmsFromNumberResponse struct {
+	Status string  `json:"status"`
+	Data   SmsData `json:"data"`
+}
+
+type PostSmsResponse struct {
 	Status string  `json:"status"`
 	Data   SmsData `json:"data"`
 }
