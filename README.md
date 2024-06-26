@@ -126,6 +126,16 @@ Insert SMS Record
 POST /sms/:mobile-number
 ```
 
+payload
+
+```json
+{
+  "from": "0916123456",
+  "to": "0909654321",
+  "body": "hello world"
+}
+```
+
 ## Class Diagram
 
 ```mermaid
