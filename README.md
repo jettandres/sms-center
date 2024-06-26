@@ -131,10 +131,13 @@ payload
 ```json
 {
   "from": "0916123456",
-  "to": "0909654321",
   "body": "hello world"
 }
 ```
+
+explanation:
+`from` - sender
+`:mobile-number` - receiver (main phone)
 
 response
 ```json
