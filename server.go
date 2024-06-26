@@ -72,7 +72,7 @@ func (s *SmsServer) handleGetAllSms(w http.ResponseWriter, r *http.Request) {
 
 	body, err := json.Marshal(resp)
 	if err != nil {
-		handleError(err, w)
+		handleError(err, http.StatusInternalServerError, w)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -91,7 +91,7 @@ func (s *SmsServer) handleGetAllSmsFromNumber(w http.ResponseWriter, r *http.Req
 
 	body, err := json.Marshal(resp)
 	if err != nil {
-		handleError(err, w)
+		handleError(err, http.StatusInternalServerError, w)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -109,14 +109,14 @@ func (s *SmsServer) handleGetSmsFromMobileNumber(w http.ResponseWriter, r *http.
 
 	body, err := json.Marshal(resp)
 	if err != nil {
-		handleError(err, w)
+		handleError(err, http.StatusInternalServerError, w)
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
 }
 
-func handleError(err error, w http.ResponseWriter) {
+func handleError(err error, statusCode int, w http.ResponseWriter) {
 	resp := ErrorResponse{
 		Status:  "error",
 		Message: err.Error(),
@@ -124,6 +124,6 @@ func handleError(err error, w http.ResponseWriter) {
 
 	body, _ := json.Marshal(resp)
 
-	w.WriteHeader(http.StatusInternalServerError)
+	w.WriteHeader(statusCode)
 	w.Write(body)
 }
