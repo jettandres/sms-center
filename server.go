@@ -74,10 +74,15 @@ func (s *SmsServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *SmsServer) handleGetAllSms(w http.ResponseWriter, r *http.Request) {
+	data, err := s.store.GetAllSms()
+	if err != nil {
+		handleError(err, http.StatusBadRequest, w)
+	}
+
 	resp := GetAllSmsResponse{
 		Status: "success",
 		Data: AllSmsData{
-			Sms: s.store.GetAllSms(),
+			Sms: data,
 		},
 	}
 
@@ -93,10 +98,16 @@ func (s *SmsServer) handleGetAllSms(w http.ResponseWriter, r *http.Request) {
 
 func (s *SmsServer) handleGetAllSmsFromNumber(w http.ResponseWriter, r *http.Request) {
 	mobileNumber := r.PathValue("mobileNumber")
+
+	data, err := s.store.GetAllSmsFromNumber(mobileNumber)
+	if err != nil {
+		handleError(err, http.StatusBadRequest, w)
+	}
+
 	resp := GetAllSmsFromNumberResponse{
 		Status: "success",
 		Data: AllSmsData{
-			Sms: s.store.GetAllSmsFromNumber(mobileNumber),
+			Sms: data,
 		},
 	}
 
@@ -111,10 +122,16 @@ func (s *SmsServer) handleGetAllSmsFromNumber(w http.ResponseWriter, r *http.Req
 
 func (s *SmsServer) handleGetSmsFromMobileNumber(w http.ResponseWriter, r *http.Request) {
 	mobileNumber := r.PathValue("mobileNumber")
+
+	data, err := s.store.GetSmsFromNumber(mobileNumber)
+	if err != nil {
+		handleError(err, http.StatusBadRequest, w)
+	}
+
 	resp := GetSmsFromNumberResponse{
 		Status: "success",
 		Data: SmsData{
-			s.store.GetSmsFromNumber(mobileNumber),
+			data,
 		},
 	}
 
@@ -137,10 +154,15 @@ func (s *SmsServer) handleInsertSms(w http.ResponseWriter, r *http.Request) {
 		handleError(err, http.StatusInternalServerError, w)
 	}
 
+	data, err := s.store.InsertSms(payload.From, mobileNumber, payload.Body)
+	if err != nil {
+		handleError(err, http.StatusBadRequest, w)
+	}
+
 	resp := InsertSmsResponse{
 		Status: "success",
 		Data: SmsData{
-			s.store.InsertSms(payload.From, mobileNumber, payload.Body),
+			data,
 		},
 	}
 
