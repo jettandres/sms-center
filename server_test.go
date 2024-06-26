@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestMain(t *testing.T) {
+func TestServer(t *testing.T) {
 	t.Run("GET /sms", func(t *testing.T) {
 		request := httptest.NewRequest(http.MethodGet, "/sms", nil)
 		response := httptest.NewRecorder()
