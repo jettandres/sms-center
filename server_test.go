@@ -63,7 +63,6 @@ func TestMain(t *testing.T) {
 
 		reqBody := SmsPayload{
 			From: "0906765432",
-			To:   "0916132456",
 			Body: "hello test",
 		}
 
@@ -79,9 +78,8 @@ func TestMain(t *testing.T) {
 
 		assertStatusOk(t, response)
 
-		var body PostSmsResponse
+		var body InsertSmsResponse
 		assertBody(t, response, body)
-
 	})
 }
 
