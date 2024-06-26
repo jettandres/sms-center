@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -55,6 +56,32 @@ func TestMain(t *testing.T) {
 
 		var body GetSmsFromNumberResponse
 		assertBody(t, response, body)
+	})
+
+	t.Run("POST /sms/:mobile-number", func(t *testing.T) {
+		mobileNumber := "0916123456"
+
+		reqBody := SmsPayload{
+			From: "0906765432",
+			To:   "0916132456",
+			Body: "hello test",
+		}
+
+		payload, _ := json.Marshal(reqBody)
+		request := httptest.NewRequest(http.MethodPost, fmt.Sprintf("/sms/%s", mobileNumber), strings.NewReader(string(payload)))
+		request.Header.Set("Content-Type", "application/json")
+
+		response := httptest.NewRecorder()
+
+		store := NewInMemoryStore()
+		server := NewSmsServer(store)
+		server.ServeHTTP(response, request)
+
+		assertStatusOk(t, response)
+
+		var body PostSmsResponse
+		assertBody(t, response, body)
+
 	})
 }
 
