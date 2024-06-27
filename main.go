@@ -8,6 +8,7 @@ import (
 func main() {
 	store := NewInMemoryStore()
 	server := NewSmsServer(store)
-	fmt.Println("server running...")
-	fmt.Println(http.ListenAndServe(":5000", server))
+	port := ":5000"
+	fmt.Printf("server running at port localhost%s", port)
+	fmt.Println(http.ListenAndServe(port, server))
 }
