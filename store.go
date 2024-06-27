@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 type Store interface {
 	GetAllSms() ([]Sms, error)
 	GetAllSmsFromNumber(mobileNumber string) ([]Sms, error)
@@ -20,7 +22,14 @@ func (store *InMemoryStore) GetAllSms() ([]Sms, error) {
 }
 
 func (store *InMemoryStore) GetAllSmsFromNumber(mobileNumber string) ([]Sms, error) {
-	return []Sms{}, nil
+	allSmsFromNumber := make([]Sms, 0)
+
+	for _, v := range store.SmsMessages {
+		if strings.Compare(v.From, mobileNumber) == 0 {
+			allSmsFromNumber = append(allSmsFromNumber, v)
+		}
+	}
+	return allSmsFromNumber, nil
 }
 
 func (store *InMemoryStore) GetSmsFromNumber(mobileNumber string) (Sms, error) {
