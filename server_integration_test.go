@@ -38,7 +38,26 @@ func TestMain(t *testing.T) {
 		}
 	})
 
-	t.Run("retrieve ALL messages of a number", func(t *testing.T) {})
+	t.Run("retrieve ALL messages of a number", func(t *testing.T) {
+		fromAnotherNumber := "0909696969"
+		server.ServeHTTP(httptest.NewRecorder(), newInsertSmsRequest(fromAnotherNumber, toNumber, "hello this is Yeji"))
+
+		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s", fromAnotherNumber), nil)
+		response := httptest.NewRecorder()
+
+		server.ServeHTTP(response, request)
+
+		var apiResp GetAllSmsFromNumberResponse
+		err := json.NewDecoder(response.Body).Decode(&apiResp)
+
+		if err != nil {
+			t.Errorf("Unable to parse response. Error: %s", err.Error())
+		}
+
+		if len(apiResp.Data.Sms) != 1 {
+			t.Errorf("Expecting just 1 message from number %s, got %d message/s", fromAnotherNumber, len(apiResp.Data.Sms))
+		}
+	})
 
 	t.Run("view a message", func(t *testing.T) {})
 }
