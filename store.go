@@ -1,6 +1,9 @@
 package main
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type Store interface {
 	GetAllSms() ([]Sms, error)
@@ -42,8 +45,9 @@ func (store *InMemoryStore) GetSmsById(id string) (Sms, error) {
 }
 
 func (store *InMemoryStore) InsertSms(fromMobileNumber string, toMobileNumber string, body string) (Sms, error) {
+	id := fmt.Sprintf("some-new-id-%d", len(store.SmsMessages))
 	sms := Sms{
-		Id:          "some-new-id",
+		Id:          id,
 		Inserted_at: "06/21/24",
 		From:        fromMobileNumber,
 		To:          toMobileNumber,
