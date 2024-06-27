@@ -8,6 +8,7 @@ type Store interface {
 }
 
 type InMemoryStore struct {
+	SmsMessages []Sms
 }
 
 func NewInMemoryStore() *InMemoryStore {
@@ -15,7 +16,7 @@ func NewInMemoryStore() *InMemoryStore {
 }
 
 func (store *InMemoryStore) GetAllSms() ([]Sms, error) {
-	return []Sms{}, nil
+	return store.SmsMessages, nil
 }
 
 func (store *InMemoryStore) GetAllSmsFromNumber(mobileNumber string) ([]Sms, error) {
@@ -27,5 +28,13 @@ func (store *InMemoryStore) GetSmsFromNumber(mobileNumber string) (Sms, error) {
 }
 
 func (store *InMemoryStore) InsertSms(fromMobileNumber string, toMobileNumber string, body string) (Sms, error) {
-	return Sms{}, nil
+	sms := Sms{
+		Id:          "some-new-id",
+		Inserted_at: "06/21/24",
+		From:        fromMobileNumber,
+		To:          toMobileNumber,
+		Body:        body,
+	}
+	store.SmsMessages = append(store.SmsMessages, sms)
+	return sms, nil
 }
