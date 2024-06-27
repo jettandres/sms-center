@@ -5,7 +5,7 @@ import "strings"
 type Store interface {
 	GetAllSms() ([]Sms, error)
 	GetAllSmsFromNumber(mobileNumber string) ([]Sms, error)
-	GetSmsFromNumber(mobileNumber string) (Sms, error)
+	GetSmsById(id string) (Sms, error)
 	InsertSms(fromMobileNumber string, toMobileNumber string, body string) (Sms, error)
 }
 
@@ -32,7 +32,12 @@ func (store *InMemoryStore) GetAllSmsFromNumber(mobileNumber string) ([]Sms, err
 	return allSmsFromNumber, nil
 }
 
-func (store *InMemoryStore) GetSmsFromNumber(mobileNumber string) (Sms, error) {
+func (store *InMemoryStore) GetSmsById(id string) (Sms, error) {
+	for _, v := range store.SmsMessages {
+		if v.Id == id {
+			return v, nil
+		}
+	}
 	return Sms{}, nil
 }
 

@@ -121,9 +121,9 @@ func (s *SmsServer) handleGetAllSmsFromNumber(w http.ResponseWriter, r *http.Req
 }
 
 func (s *SmsServer) handleGetSmsFromMobileNumber(w http.ResponseWriter, r *http.Request) {
-	mobileNumber := r.PathValue("mobileNumber")
+	id := r.PathValue("id")
 
-	data, err := s.store.GetSmsFromNumber(mobileNumber)
+	data, err := s.store.GetSmsById(id)
 	if err != nil {
 		handleError(err, http.StatusBadRequest, w)
 	}
