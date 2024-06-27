@@ -59,7 +59,34 @@ func TestMain(t *testing.T) {
 		}
 	})
 
-	t.Run("view a message", func(t *testing.T) {})
+	t.Run("view a specific message", func(t *testing.T) {
+		response := httptest.NewRecorder()
+		server.ServeHTTP(response, newInsertSmsRequest(fromNumber, toNumber, "this is the final message"))
+
+		var insertApiResp InsertSmsResponse
+		err := json.NewDecoder(response.Body).Decode(&insertApiResp)
+
+		if err != nil {
+			t.Errorf("Unable to parse response. Error: %s", err.Error())
+		}
+
+		id := insertApiResp.Data.Sms.Id
+		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s/%s", fromNumber, id), nil)
+
+		getResponse := httptest.NewRecorder()
+		server.ServeHTTP(getResponse, request)
+
+		var getSmsFromNumResp GetSmsFromNumberResponse
+		err = json.NewDecoder(getResponse.Body).Decode(&getSmsFromNumResp)
+
+		if err != nil {
+			t.Errorf("Unable to parse response. Error: %s", err.Error())
+		}
+
+		if getSmsFromNumResp.Data.Sms.Id != id {
+			t.Errorf("Expecting to retrieve SMS with id (\"%s\"), got SMS with id (\"%s\")", id, getSmsFromNumResp.Data.Sms.Id)
+		}
+	})
 }
 
 func newInsertSmsRequest(fromNumber string, toNumber string, body string) *http.Request {
