@@ -31,7 +31,7 @@ func NewSqliteStore() *SqliteStore {
 func (store *SqliteStore) GetAllSms() ([]Sms, error) {
 	allSms := make([]Sms, 0)
 
-	stmt, err := store.DB.Prepare("SELECT * FROM sms_messages")
+	stmt, err := store.DB.Prepare("SELECT id, body, sender, receiver, inserted_at FROM sms_messages")
 	defer stmt.Close()
 
 	if err != nil {
