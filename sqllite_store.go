@@ -91,7 +91,23 @@ func (store *SqliteStore) GetAllSmsFromSender(sender string) ([]Sms, error) {
 }
 
 func (store *SqliteStore) GetSmsById(id string) (Sms, error) {
-	return Sms{}, nil
+	stmt, err := store.DB.Prepare("SELECT id, body, sender, receiver, inserted_at FROM sms_messages WHERE id = ?")
+	defer stmt.Close()
+
+	if err != nil {
+		fmt.Printf("[SQLITE_STORE][STATEMENT] Error: %s", err.Error())
+		panic(err.Error())
+	}
+
+	var sms Sms
+	err = stmt.QueryRow(id).Scan(&sms.Id, &sms.Body, &sms.Sender, &sms.Receiver, &sms.Inserted_at)
+
+	if err != nil {
+		fmt.Printf("[GET_SMS_BY_ID][QUERY] Error: %s", err.Error())
+		panic(err.Error())
+	}
+
+	return sms, nil
 }
 
 func (store *SqliteStore) InsertSms(sender string, receiver string, body string) (Sms, error) {
