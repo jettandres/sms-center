@@ -61,7 +61,33 @@ func (store *SqliteStore) GetAllSms() ([]Sms, error) {
 }
 
 func (store *SqliteStore) GetAllSmsFromSender(sender string) ([]Sms, error) {
-	return []Sms{}, nil
+	allSmsFromSender := make([]Sms, 0)
+
+	stmt, err := store.DB.Prepare("SELECT id, body, sender, receiver, inserted_at FROM sms_messages WHERE sender = ?")
+	defer stmt.Close()
+
+	if err != nil {
+		fmt.Printf("[SQLITE_STORE][STATEMENT] Error: %s", err.Error())
+		panic(err.Error())
+	}
+
+	rows, err := stmt.Query(sender)
+	defer rows.Close()
+
+	if err != nil {
+		fmt.Printf("[SQLITE_STORE][QUERY] Error: %s", err.Error())
+		panic(err.Error())
+	}
+
+	for rows.Next() {
+		var sms Sms
+		if err := rows.Scan(&sms.Id, &sms.Body, &sms.Sender, &sms.Receiver, &sms.Inserted_at); err != nil {
+			return nil, fmt.Errorf("[GET_ALL_SMS_FROM_SENDER][ERROR] %s", err.Error())
+		}
+		allSmsFromSender = append(allSmsFromSender, sms)
+	}
+
+	return allSmsFromSender, nil
 }
 
 func (store *SqliteStore) GetSmsById(id string) (Sms, error) {
