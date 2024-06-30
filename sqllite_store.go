@@ -10,6 +10,7 @@ import (
 type SqliteStore struct {
 	driverName string
 	dsn        string
+	DB         *sql.DB
 }
 
 func NewSqliteStore() *SqliteStore {
@@ -18,23 +19,19 @@ func NewSqliteStore() *SqliteStore {
 		dsn:        os.Getenv("SQL_SQLITE_DSN"),
 	}
 
-	return store
-}
-
-func (store *SqliteStore) Database() *sql.DB {
 	db, err := sql.Open(store.driverName, store.dsn)
 	if err != nil {
 		panic(err.Error())
 	}
+	store.DB = db
 
-	return db
+	return store
 }
 
 func (store *SqliteStore) GetAllSms() ([]Sms, error) {
 	allSms := make([]Sms, 0)
-	defer store.Database().Close()
 
-	stmt, err := store.Database().Prepare("SELECT * FROM sms_messages")
+	stmt, err := store.DB.Prepare("SELECT * FROM sms_messages")
 	defer stmt.Close()
 
 	if err != nil {
