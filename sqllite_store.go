@@ -3,8 +3,10 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
 	"os"
+
+	"github.com/google/uuid"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type SqliteStore struct {
@@ -67,5 +69,28 @@ func (store *SqliteStore) GetSmsById(id string) (Sms, error) {
 }
 
 func (store *SqliteStore) InsertSms(sender string, receiver string, body string) (Sms, error) {
-	return Sms{}, nil
+	stmt, err := store.DB.Prepare("INSERT INTO sms_messages (id, inserted_at, body, sender, receiver) VALUES (?,datetime(),?,?,?)")
+	defer stmt.Close()
+
+	if err != nil {
+		fmt.Printf("[SQLITE_STORE][STATEMENT] Error: %s", err.Error())
+		panic(err.Error())
+	}
+
+	sms := Sms{
+		Id:       uuid.NewString(),
+		Body:     body,
+		Sender:   sender,
+		Receiver: receiver,
+	}
+
+	res, err := stmt.Exec(sms.Id, sms.Body, sms.Sender, sms.Receiver)
+	affected, err := res.RowsAffected()
+
+	if affected == 0 {
+		fmt.Printf("[SQLITE_STORE][INSERT] Error: %s", err.Error())
+		return Sms{}, err
+	}
+
+	return sms, nil
 }
