@@ -157,13 +157,17 @@ response
 
 ## Class Diagram
 
+Sqlite data types are simpler hence why everything is in `text`
+
+Read more about the available types [here](https://www.sqlite.org/datatype3.html)
+
 ```mermaid
 erDiagram
-SMS {
-  string id
-  date inserted_at
-  string from
-  string to
-  string body
+sms_messages {
+  text id
+  text inserted_at
+  text body
+  text sender
+  text receiver
 }
 ```
