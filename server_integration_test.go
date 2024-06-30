@@ -91,8 +91,8 @@ func TestMain(t *testing.T) {
 
 func newInsertSmsRequest(fromNumber string, toNumber string, body string) *http.Request {
 	reqBody := SmsPayload{
-		From: fromNumber,
-		Body: body,
+		Receiver: fromNumber,
+		Body:     body,
 	}
 	payload, _ := json.Marshal(reqBody)
 	return httptest.NewRequest(http.MethodPost, fmt.Sprintf("/sms/%s", toNumber), strings.NewReader(string(payload)))

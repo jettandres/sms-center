@@ -25,9 +25,9 @@ func TestServer(t *testing.T) {
 		assertBody(t, response, body)
 	})
 
-	t.Run("GET /sms/:mobile-number", func(t *testing.T) {
-		mobileNumber := "0916123456"
-		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s", mobileNumber), nil)
+	t.Run("GET /sms/:sender", func(t *testing.T) {
+		sender := "0916123456"
+		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s", sender), nil)
 		response := httptest.NewRecorder()
 
 		store := NewInMemoryStore()
@@ -41,10 +41,10 @@ func TestServer(t *testing.T) {
 		assertBody(t, response, body)
 	})
 
-	t.Run("GET /sms/:mobile-number/:id", func(t *testing.T) {
-		mobileNumber := "091612456"
+	t.Run("GET /sms/:sender/:id", func(t *testing.T) {
+		sender := "091612456"
 		id := "some-uuid"
-		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s/%s", mobileNumber, id), nil)
+		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s/%s", sender, id), nil)
 		response := httptest.NewRecorder()
 
 		store := NewInMemoryStore()
@@ -58,16 +58,16 @@ func TestServer(t *testing.T) {
 		assertBody(t, response, body)
 	})
 
-	t.Run("POST /sms/:mobile-number", func(t *testing.T) {
-		mobileNumber := "0916123456"
+	t.Run("POST /sms/:sender", func(t *testing.T) {
+		sender := "0916123456"
 
 		reqBody := SmsPayload{
-			From: "0906765432",
-			Body: "hello test",
+			Receiver: "0906765432",
+			Body:     "hello test",
 		}
 
 		payload, _ := json.Marshal(reqBody)
-		request := httptest.NewRequest(http.MethodPost, fmt.Sprintf("/sms/%s", mobileNumber), strings.NewReader(string(payload)))
+		request := httptest.NewRequest(http.MethodPost, fmt.Sprintf("/sms/%s", sender), strings.NewReader(string(payload)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response := httptest.NewRecorder()

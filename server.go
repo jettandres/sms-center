@@ -8,14 +8,14 @@ import (
 type Sms struct {
 	Id          string `json:"id"`
 	Inserted_at string `json:"inserted_at"`
-	From        string `json:"from"`
-	To          string `json:"to"`
+	Sender      string `json:"sender"`
+	Receiver    string `json:"receiver"`
 	Body        string `json:"body"`
 }
 
 type SmsPayload struct {
-	From string `json:"from"`
-	Body string `json:"body"`
+	Receiver string `json:"receiver"`
+	Body     string `json:"body"`
 }
 
 type AllSmsData struct {
@@ -66,9 +66,9 @@ func (s *SmsServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	router := http.NewServeMux()
 
 	router.HandleFunc("GET /sms", s.handleGetAllSms)
-	router.HandleFunc("GET /sms/{mobileNumber}", s.handleGetAllSmsFromNumber)
-	router.HandleFunc("GET /sms/{mobileNumber}/{id}", s.handleGetSmsFromMobileNumber)
-	router.HandleFunc("POST /sms/{mobileNumber}", s.handleInsertSms)
+	router.HandleFunc("GET /sms/{sender}", s.handleGetAllSmsFromSender)
+	router.HandleFunc("GET /sms/{sender}/{id}", s.handleGetSmsFromSender)
+	router.HandleFunc("POST /sms/{sender}", s.handleInsertSms)
 
 	router.ServeHTTP(w, r)
 }
@@ -96,10 +96,10 @@ func (s *SmsServer) handleGetAllSms(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (s *SmsServer) handleGetAllSmsFromNumber(w http.ResponseWriter, r *http.Request) {
-	mobileNumber := r.PathValue("mobileNumber")
+func (s *SmsServer) handleGetAllSmsFromSender(w http.ResponseWriter, r *http.Request) {
+	sender := r.PathValue("sender")
 
-	data, err := s.store.GetAllSmsFromNumber(mobileNumber)
+	data, err := s.store.GetAllSmsFromSender(sender)
 	if err != nil {
 		handleError(err, http.StatusBadRequest, w)
 	}
@@ -120,7 +120,7 @@ func (s *SmsServer) handleGetAllSmsFromNumber(w http.ResponseWriter, r *http.Req
 	w.Write(body)
 }
 
-func (s *SmsServer) handleGetSmsFromMobileNumber(w http.ResponseWriter, r *http.Request) {
+func (s *SmsServer) handleGetSmsFromSender(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 
 	data, err := s.store.GetSmsById(id)
@@ -145,7 +145,7 @@ func (s *SmsServer) handleGetSmsFromMobileNumber(w http.ResponseWriter, r *http.
 }
 
 func (s *SmsServer) handleInsertSms(w http.ResponseWriter, r *http.Request) {
-	mobileNumber := r.PathValue("mobileNumber")
+	sender := r.PathValue("sender")
 
 	var payload SmsPayload
 	err := json.NewDecoder(r.Body).Decode(&payload)
@@ -154,7 +154,7 @@ func (s *SmsServer) handleInsertSms(w http.ResponseWriter, r *http.Request) {
 		handleError(err, http.StatusInternalServerError, w)
 	}
 
-	data, err := s.store.InsertSms(payload.From, mobileNumber, payload.Body)
+	data, err := s.store.InsertSms(payload.Receiver, sender, payload.Body)
 	if err != nil {
 		handleError(err, http.StatusBadRequest, w)
 	}

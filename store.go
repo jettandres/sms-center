@@ -7,9 +7,9 @@ import (
 
 type Store interface {
 	GetAllSms() ([]Sms, error)
-	GetAllSmsFromNumber(mobileNumber string) ([]Sms, error)
+	GetAllSmsFromSender(sender string) ([]Sms, error)
 	GetSmsById(id string) (Sms, error)
-	InsertSms(fromMobileNumber string, toMobileNumber string, body string) (Sms, error)
+	InsertSms(sender string, receiver string, body string) (Sms, error)
 }
 
 type InMemoryStore struct {
@@ -24,11 +24,11 @@ func (store *InMemoryStore) GetAllSms() ([]Sms, error) {
 	return store.SmsMessages, nil
 }
 
-func (store *InMemoryStore) GetAllSmsFromNumber(mobileNumber string) ([]Sms, error) {
+func (store *InMemoryStore) GetAllSmsFromSender(sender string) ([]Sms, error) {
 	allSmsFromNumber := make([]Sms, 0)
 
 	for _, v := range store.SmsMessages {
-		if strings.Compare(v.From, mobileNumber) == 0 {
+		if strings.Compare(v.Sender, sender) == 0 {
 			allSmsFromNumber = append(allSmsFromNumber, v)
 		}
 	}
@@ -44,13 +44,13 @@ func (store *InMemoryStore) GetSmsById(id string) (Sms, error) {
 	return Sms{}, nil
 }
 
-func (store *InMemoryStore) InsertSms(fromMobileNumber string, toMobileNumber string, body string) (Sms, error) {
+func (store *InMemoryStore) InsertSms(sender string, receiver string, body string) (Sms, error) {
 	id := fmt.Sprintf("some-new-id-%d", len(store.SmsMessages))
 	sms := Sms{
 		Id:          id,
 		Inserted_at: "06/21/24",
-		From:        fromMobileNumber,
-		To:          toMobileNumber,
+		Sender:      sender,
+		Receiver:    receiver,
 		Body:        body,
 	}
 	store.SmsMessages = append(store.SmsMessages, sms)

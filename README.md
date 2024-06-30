@@ -72,22 +72,22 @@ Responses will be in JSON and will semi-comply with [JSend](https://github.com/o
           {
              "id": "10b41abe-db8e-432f-bd01-2cb34652dfa3",
              "inserted_at": "2024-06-23t10:55:04z",
-             "from": "0916123456",
-             "to": "09062088003",
+             "sender": "0916123456",
+             "receiver": "09062088003",
              "body": "hello world"
           },
           {
              "id": "10b41eba-db8e-432f-bd01-2cb34652dda1",
              "inserted_at": "2024-06-23t10:55:04z",
-             "from": "0916123456",
-             "to": "09062088003",
+             "sender": "0916123456",
+             "receiver": "09062088003",
              "body": "hello again world"
           },
           {
              "id": "10b41eba-db8e-432f-bd01-2cb34652dda1",
              "inserted_at": "2024-06-23t10:55:04z",
-             "from": "0916123456",
-             "to": "09062088003",
+             "sender": "0916123456",
+             "receiver": "09062088003",
              "body": "sup world"
           }
         ]
@@ -113,31 +113,27 @@ GET /sms
 
 Retrieve SMS messages of a number
 ```
-GET /sms/:mobile-number
+GET /sms/:sender
 ```
 
-Retrieve SMS message of a specific number
+Retrieve SMS message of from sender
 ```
-GET /sms/:mobile-number/:id
+GET /sms/:sender/:id
 ```
 
 Insert SMS Record
 ```
-POST /sms/:mobile-number
+POST /sms/:sender
 ```
 
 payload
 
 ```json
 {
-  "from": "0916123456",
+  "receiver": "0916123456",
   "body": "hello world"
 }
 ```
-
-explanation:
-`from` - sender
-`:mobile-number` - receiver (main phone)
 
 response
 ```json
@@ -147,9 +143,9 @@ response
       "sms": {
          "id": "10b41abe-db8e-432f-bd01-2cb34652dfa3",
          "inserted_at": "2024-06-23t10:55:04z",
-         "from": "0916123456",
-         "to": "09062088003",
          "body": "hello world"
+         "sender": "0916123456",
+         "receiver": "09062088003"
       }
     }
 }
