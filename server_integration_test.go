@@ -13,12 +13,12 @@ func TestMain(t *testing.T) {
 	store := NewInMemoryStore()
 	server := NewSmsServer(store)
 
-	fromNumber := "0906765432"
-	toNumber := "0916123456"
+	sender := "0906765432"
+	receiver := "0916123456"
 
-	server.ServeHTTP(httptest.NewRecorder(), newInsertSmsRequest(fromNumber, toNumber, "hello integ"))
-	server.ServeHTTP(httptest.NewRecorder(), newInsertSmsRequest(fromNumber, toNumber, "hello again integ"))
-	server.ServeHTTP(httptest.NewRecorder(), newInsertSmsRequest(fromNumber, toNumber, "hello once more integ"))
+	server.ServeHTTP(httptest.NewRecorder(), newInsertSmsRequest(sender, receiver, "hello integ"))
+	server.ServeHTTP(httptest.NewRecorder(), newInsertSmsRequest(sender, receiver, "hello again integ"))
+	server.ServeHTTP(httptest.NewRecorder(), newInsertSmsRequest(sender, receiver, "hello once more integ"))
 
 	t.Run("retrieve ALL stored messages", func(t *testing.T) {
 		request := httptest.NewRequest(http.MethodGet, "/sms", nil)
@@ -39,10 +39,10 @@ func TestMain(t *testing.T) {
 	})
 
 	t.Run("retrieve ALL messages of a number", func(t *testing.T) {
-		fromAnotherNumber := "0909696969"
-		server.ServeHTTP(httptest.NewRecorder(), newInsertSmsRequest(fromAnotherNumber, toNumber, "hello this is Yeji"))
+		sender := "0909696969"
+		server.ServeHTTP(httptest.NewRecorder(), newInsertSmsRequest(sender, receiver, "hello this is Yeji"))
 
-		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s", fromAnotherNumber), nil)
+		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s", sender), nil)
 		response := httptest.NewRecorder()
 
 		server.ServeHTTP(response, request)
@@ -55,13 +55,13 @@ func TestMain(t *testing.T) {
 		}
 
 		if len(apiResp.Data.Sms) != 1 {
-			t.Errorf("Expecting just 1 message from number %s, got %d message/s", fromAnotherNumber, len(apiResp.Data.Sms))
+			t.Errorf("Expecting just 1 message from number %s, got %d message/s", sender, len(apiResp.Data.Sms))
 		}
 	})
 
 	t.Run("view a specific message", func(t *testing.T) {
 		response := httptest.NewRecorder()
-		server.ServeHTTP(response, newInsertSmsRequest(fromNumber, toNumber, "this is the final message"))
+		server.ServeHTTP(response, newInsertSmsRequest(sender, receiver, "this is the final message"))
 
 		var insertApiResp InsertSmsResponse
 		err := json.NewDecoder(response.Body).Decode(&insertApiResp)
@@ -71,7 +71,7 @@ func TestMain(t *testing.T) {
 		}
 
 		id := insertApiResp.Data.Sms.Id
-		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s/%s", fromNumber, id), nil)
+		request := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/sms/%s/%s", sender, id), nil)
 
 		getResponse := httptest.NewRecorder()
 		server.ServeHTTP(getResponse, request)
@@ -89,11 +89,11 @@ func TestMain(t *testing.T) {
 	})
 }
 
-func newInsertSmsRequest(fromNumber string, toNumber string, body string) *http.Request {
+func newInsertSmsRequest(sender string, receiver string, body string) *http.Request {
 	reqBody := SmsPayload{
-		Receiver: fromNumber,
+		Receiver: receiver,
 		Body:     body,
 	}
 	payload, _ := json.Marshal(reqBody)
-	return httptest.NewRequest(http.MethodPost, fmt.Sprintf("/sms/%s", toNumber), strings.NewReader(string(payload)))
+	return httptest.NewRequest(http.MethodPost, fmt.Sprintf("/sms/%s", sender), strings.NewReader(string(payload)))
 }

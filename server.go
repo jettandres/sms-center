@@ -154,7 +154,7 @@ func (s *SmsServer) handleInsertSms(w http.ResponseWriter, r *http.Request) {
 		handleError(err, http.StatusInternalServerError, w)
 	}
 
-	data, err := s.store.InsertSms(payload.Receiver, sender, payload.Body)
+	data, err := s.store.InsertSms(sender, payload.Receiver, payload.Body)
 	if err != nil {
 		handleError(err, http.StatusBadRequest, w)
 	}
