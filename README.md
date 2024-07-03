@@ -37,7 +37,7 @@ Please take time to read the [disclaimer](#disclaimer) below.
 ## Use Cases
 - Store incoming SMS messages from Main Phone via `POST` endpoint
 - Retrieve SMS messages from Backup Phone React Native App via `GET` endpoint
-- Retrieve real-time database copy using `syncthing`
+- Retrieve real-time database copy using `syncthing` for offline use
 
 ## Diagram
 
