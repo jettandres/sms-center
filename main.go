@@ -9,7 +9,9 @@ import (
 func main() {
 	store := NewSqliteStore()
 	server := NewSmsServer(store)
+	auth := NewAuth(server)
+
 	port := ":5000"
-	fmt.Printf("server running at port localhost%s", port)
-	fmt.Println(http.ListenAndServe(port, server))
+	fmt.Printf("server running at port localhost%s\n", port)
+	fmt.Println(http.ListenAndServe(port, auth))
 }

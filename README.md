@@ -8,7 +8,7 @@ I'm paranoid of losing my main phone with my only number where a lot of my main 
 ## Security Warning
 The code is mostly complete now. I'm just giving a heads up for anyone wanting to deploy this for personal use:
 
-By practice it is HIGHLY recommended to have an authentication middleware to secure the API endpoints.
+By practice it is HIGHLY recommended to have an authentication middleware implementation to secure the API endpoints.
 Right now I'm excluding authentication from this codebase and I'm still contemplating if it's safe to open-source.
 
 Just know that having more layers of security aside from a username and password helps a lot. Here are some ideas:
@@ -20,7 +20,7 @@ Just know that having more layers of security aside from a username and password
   - Fingerprint
 - A unique keyphrase as cherry on top
 
-Please take time to read the [disclaimer](#disclaimer) below.
+Please take time to read the [disclaimer](#disclaimer) below. Then read about using the basic [Authentication](#Authentication) below
 
 ## Components
 - **Main Phone**
@@ -184,6 +184,20 @@ sms_messages {
   text receiver
 }
 ```
+
+# Authentication
+
+The sms server instance under `main.go` is currently wrapped in auth middleware as follows
+
+```go
+// main.go
+smsServer := NewSmsServer(store)
+authServer := NewAuthServer(smsServer)
+fmt.Println(http.ListenAndServe(port, auth))
+```
+
+- Feel free to remove `authServer` or modify it in `authenticate.go` if needed
+- Update your `.env` file to have an `AUTH_VALIDATE_URL` value. See the `.env.sample` file for more details
 
 # Disclaimer
 SMS Center (the "Server") is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Server or the use or other dealings in the Server.
